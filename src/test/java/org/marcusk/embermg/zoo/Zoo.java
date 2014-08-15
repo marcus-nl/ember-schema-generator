@@ -20,13 +20,19 @@ public class Zoo {
 		this.name = name;
 		this.city = city;
 	}
-
-	public void setAnimals(List<Animal> animals) {
-		this.animals = animals;
+	
+	@JsonProperty
+	public Animal getStar() {
+		return star;
+	}
+	
+	@JsonProperty
+	public List<Animal> getAnimals() {
+		return animals;
 	}
 
 	@Override
 	public String toString() {
-		return "Zoo [name=" + name + ", city=" + city + ", animals=" + animals + "]";
+		return "Zoo [name=" + name + ", city=" + city + ", star=" + star + ", animals=" + animals + "]";
 	}
 }

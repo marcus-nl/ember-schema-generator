@@ -9,7 +9,8 @@ public class ExplicitPropertiesFilter extends SimpleBeanPropertyFilter {
 
 	@Override
 	protected boolean include(BeanPropertyWriter writer) {
-		return writer.getAnnotation(JsonProperty.class) != null;
+		JsonProperty anno = writer.getAnnotation(JsonProperty.class);
+		return anno != null;
 	}
 
 	@Override

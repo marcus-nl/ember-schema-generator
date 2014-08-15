@@ -1,33 +1,56 @@
 package org.marcusk.embermg;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 public class EmberClass {
 
+	private final Class<?> javaClass;
 	private final EmberTypeRef ref;
-	private final EmberTypeRef superType;
-	private final List<EmberProperty> properties;
-	
-	public EmberClass(EmberTypeRef ref, EmberTypeRef superType) {
+	private final Map<String,EmberProperty> properties;
+
+	public EmberClass(Class<?> javaClass, EmberTypeRef ref) {
 		super();
-		this.ref = ref;
-		this.superType = superType;
-		this.properties = new ArrayList<EmberProperty>();
+		this.javaClass = Preconditions.checkNotNull(javaClass);
+		this.ref = Preconditions.checkNotNull(ref);
+		this.properties = new LinkedHashMap<>();
+	}
+	
+	public Class<?> getJavaClass() {
+		return javaClass;
 	}
 	
 	public String getName() {
-		return ref.getName();
+		return ref.getFullName();
 	}
 
-	public EmberTypeRef getTypeRef() {
-		return ref;
+	/**
+	 * @return this class' own (non-inherited) properties.
+	 */
+	public Iterable<EmberProperty> ownProperties() {
+		return Iterables.filter(properties.values(), new Predicate<EmberProperty>() {
+			@Override
+			public boolean apply(EmberProperty p) {
+				return !isInheritedProperty(p.getName());
+			}
+		});
 	}
 	
-	public EmberTypeRef getSuperType() {
-		return superType;
+	private boolean hasProperty(String name) {
+		return properties.containsKey(name)
+			|| isInheritedProperty(name);
+	}
+	
+	private boolean isInheritedProperty(String name) {
+		if (getSuperType().isPresent()) {
+			return getSuperType().get().hasProperty(name);
+		}
+		return false;
 	}
 	
 	public void addProperty(String name, EmberTypeRef typeRef) {
@@ -35,25 +58,30 @@ public class EmberClass {
 		Preconditions.checkNotNull(typeRef);
 		
 		EmberProperty property = new EmberProperty(name, typeRef);
-		properties.add(property);
+		properties.put(name, property);
 	}
+	
+	// initialized by EmberModelCollector:
 
-	public void emit(EmberModelWriter writer) {
-		writer.startModel(this);
-
-		for (EmberProperty p : properties) {
-			writer.addProperty(p.getName(), p.getTypeRef().getName());
+	private Optional<EmberClass> _superType = null;
+	
+	public Optional<EmberClass> getSuperType() {
+		if (_superType == null) {
+			throw new IllegalStateException();
 		}
-		
-		writer.endModel();
+		return _superType;
 	}
-
+	
+	public void initializeSuperType(EmberClass superType) {
+		this._superType = Optional.fromNullable(superType);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("EmberClass ").append(getName()).append(" [\n");
 		
-		for (EmberProperty p : properties) {
+		for (EmberProperty p : properties.values()) {
 			sb.append("- ").append(p).append("\n");
 		}
 		

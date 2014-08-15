@@ -1,29 +1,39 @@
 package org.marcusk.embermg;
 
 public class EmberTypeRef {
-	public static final EmberTypeRef STRING = new EmberTypeRef("DS.attr('string')");
-	public static final EmberTypeRef NUMBER = new EmberTypeRef("DS.attr('number')");
-	public static final EmberTypeRef BOOLEAN = new EmberTypeRef("DS.attr('boolean')");
+	public static final EmberTypeRef STRING = new EmberTypeRef("attr", "string");
+	public static final EmberTypeRef NUMBER = new EmberTypeRef("attr", "number");
+	public static final EmberTypeRef BOOLEAN = new EmberTypeRef("attr", "boolean");
 	
-	public static EmberTypeRef forAsdf(String s) {
-		String t = "DS.fragment('" + s + "')";
-		return new EmberTypeRef(t);
+	public static EmberTypeRef forType(Class<?> javaClass) {
+		return forType(javaClass.getSimpleName());
+	}
+	
+	public static EmberTypeRef forType(String s) {
+		return new EmberTypeRef("fragment", s);
 	}
 	
 	public static EmberTypeRef forCollection(String s) {
-		String t = "DS.fragments('" + s + "')";
-		return new EmberTypeRef(t);
+		return new EmberTypeRef("fragments", s);
 	}
 	
+	private final String kind;
 	private final String name;
+	// fullName
+	// shortName
 
-	private EmberTypeRef(String name) {
+	private EmberTypeRef(String kind, String name) {
 		super();
+		this.kind = kind;
 		this.name = name;
 	}
 	
-	public String getName() {
+	public String getFullName() {
 		return name;
+	}
+	
+	public String getDeclaration() {
+		return "DS." + kind + "('" + name + "')";
 	}
 	
 	@Override

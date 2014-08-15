@@ -8,6 +8,8 @@ import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.google.common.base.Optional;
+
 public class EmberModelWriter implements Closeable {
 	private final Writer writer;
 	
@@ -35,8 +37,9 @@ public class EmberModelWriter implements Closeable {
 	}
 
 	public void startModel(EmberClass emberClass) {
-		EmberTypeRef superType = emberClass.getSuperType();
-		String superName = superType == null ? "" : superType.getName();
+		Optional<EmberClass> superType = emberClass.getSuperType();
+		String superName = superType.isPresent() ? superType.get().getName() : "";
+		
 		startModel(emberClass.getName(), superName, "(alias)");
 	}
 

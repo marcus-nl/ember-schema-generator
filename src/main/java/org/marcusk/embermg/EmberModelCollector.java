@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
-
 public class EmberModelCollector {
 	private final ObjectMapper objectMapper;
 	private final EmberTypeRegistry typeRegistry;
@@ -34,41 +33,71 @@ public class EmberModelCollector {
 		this.typeRegistry = typeRegistry;
 	}
 	
-	public void processClass(Class<?> c) {
-		try {
-			FormatVisitor visitor = new FormatVisitor(objectMapper.getSerializerProvider());
-			objectMapper.acceptJsonFormatVisitor(c, visitor);
-		}
-		catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		}
+	public EmberModelCollector(ObjectMapper objectMapper) {
+		this(objectMapper, new EmberTypeRegistry());
+	}
+	
+	public EmberModelCollector addClass(Class<?> c) {
+		processClass(c);
+		return this;
 	}
 
-	public void processHierarchy(Class<?> base) {
-		processClass(base);
+	public EmberModelCollector addHierarchy(Class<?> base) {
+		addClass(base);
 		
 		Reflections reflections = new Reflections();
 		
 		for (Class<?> c : reflections.getSubTypesOf(base)) {
 			processClass(c);
 		}
+		
+		return this;
+	}
+
+	public void write(EmberModelWriter writer) {
+		initializeSuperTypes();
+		
+		for (EmberClass c : typeRegistry.getEmberClasses()) {
+			writeClass(writer, c);
+		}
+	}
+
+	protected void writeClass(EmberModelWriter writer, EmberClass c) {
+		writer.startModel(c);
+		
+		for (EmberProperty p : c.ownProperties()) {
+			writer.addProperty(p.getName(), p.getTypeRef().getDeclaration());
+		}
+		
+		writer.endModel();
+	}
+	
+	private void initializeSuperTypes() {
+		for (EmberClass c : typeRegistry.getEmberClasses()) {
+			Class<?> superJavaClass = c.getJavaClass().getSuperclass();
+			EmberTypeRef superTypeRef = typeRegistry.getTypeRef(superJavaClass);
+			c.initializeSuperType(typeRegistry.getEmberClass(superTypeRef));
+		}
+	}
+
+	protected EmberTypeRef processClass(Class<?> c) {
+		try {
+			FormatVisitor visitor = new FormatVisitor(objectMapper.getSerializerProvider());
+			objectMapper.acceptJsonFormatVisitor(c, visitor);
+			return visitor.getTypeRef();
+		}
+		catch (JsonMappingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	protected EmberClass convert(SimpleType jacksonType) {
-		EmberTypeRef superType = null;
-		String name = jacksonType.getRawClass().getSimpleName();
-		EmberTypeRef ref = EmberTypeRef.forAsdf(name);
-		return new EmberClass(ref, superType);
-	}
-	
-	protected EmberTypeRef convertTypeRef(SimpleType type) {
-		return EmberTypeRef.forAsdf(type.toString());
+		Class<?> javaClass = jacksonType.getRawClass();
+		EmberTypeRef ref = typeRegistry.getTypeRef(javaClass);
+		
+		return new EmberClass(javaClass, ref);
 	}
 
-	protected EmberTypeRef convertTypeRef(CollectionType type) {
-		return EmberTypeRef.forAsdf(type.toString());
-	}
-	
 	class FormatVisitor implements JsonFormatVisitorWrapper {
 
 		private SerializerProvider provider;
@@ -114,12 +143,6 @@ public class EmberModelCollector {
 			typeRef = EmberTypeRef.forCollection(s);
 			return new ArrayVisitor(getProvider());
 		}
-
-		@Override
-		public JsonMapFormatVisitor expectMapFormat(JavaType type) throws JsonMappingException {
-			//TODO?
-			return null;
-		}
 		
 		@Override
 		public JsonStringFormatVisitor expectStringFormat(JavaType type) throws JsonMappingException {
@@ -154,6 +177,11 @@ public class EmberModelCollector {
 		public JsonAnyFormatVisitor expectAnyFormat(JavaType type) throws JsonMappingException {
 			throw new UnsupportedOperationException();
 		}
+		
+		@Override
+		public JsonMapFormatVisitor expectMapFormat(JavaType type) throws JsonMappingException {
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 	class ObjectVisitor extends JsonObjectFormatVisitor.Base {
@@ -167,39 +195,46 @@ public class EmberModelCollector {
 
 		@Override
 		public void property(BeanProperty prop) throws JsonMappingException {
-			JsonSerializer<Object> ser = getSerializer(prop);
-			if (ser != null) {
-				property(prop.getName(), ser, prop.getType());
-			}
+			addProperty(prop, false);
 		}
 
 		@Override
 		public void optionalProperty(BeanProperty prop) throws JsonMappingException {
-			JsonSerializer<Object> ser = getSerializer(prop);
-			if (ser != null) {
-				optionalProperty(prop.getName(), ser, prop.getType());
-			}
+			addProperty(prop, true);
 		}
 
 		@Override
 		public void property(String name, JsonFormatVisitable handler, JavaType jacksonType) throws JsonMappingException {
-			addProperty(name, handler, jacksonType);
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public void optionalProperty(String name, JsonFormatVisitable handler, JavaType jacksonType) throws JsonMappingException {
-			addProperty(name, handler, jacksonType);
+			throw new UnsupportedOperationException();
 		}
 		
-		private void addProperty(String name, JsonFormatVisitable handler, JavaType jacksonType) throws JsonMappingException {
-			if (jacksonType == null) {
-				throw new IllegalArgumentException("Missing type for property '" + name + "'");
+		private void addProperty(BeanProperty prop, boolean optional) throws JsonMappingException {
+			JsonSerializer<Object> ser = getSerializer(prop);
+			if (ser == null) {
+				return;
 			}
-
-			FormatVisitor visitor = new FormatVisitor(getProvider());
-			handler.acceptJsonFormatVisitor(visitor, jacksonType);
 			
-			emberClass.addProperty(name, visitor.getTypeRef());
+			// dit werkt helaas niet zo, want dit bevat ook overridden members.
+			// dus: via hasOwnProperty tijdens printen.
+//			Class<?> declaringClass = prop.getMember().getDeclaringClass();
+//			if (!declaringClass.equals(emberClass.getJavaClass())) {
+//				return;
+//			}
+			
+			JavaType jacksonType = prop.getType();
+			if (jacksonType == null) {
+				throw new IllegalArgumentException("Missing type for property '" + prop.getName() + "'");
+			}
+			
+			FormatVisitor visitor = new FormatVisitor(getProvider());
+			ser.acceptJsonFormatVisitor(visitor, jacksonType);
+
+			emberClass.addProperty(prop.getName(), visitor.getTypeRef());
 		}
 
 		/** @see com.fasterxml.jackson.module.jsonSchema.factories.ObjectVisitor#getSer */

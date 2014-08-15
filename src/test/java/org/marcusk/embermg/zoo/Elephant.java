@@ -5,36 +5,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Elephant extends Animal {
 
-	@JsonProperty
-	private String name;
-
 	@JsonCreator
 	public Elephant(@JsonProperty("name") String name) {
-		this.name = name;
+		super(name);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String getSound() {
-		return "trumpet";
-	}
-
+	@Override
 	public String getType() {
 		return "herbivorous";
 	}
 
-	public boolean isEndangered() {
-		return false;
+	@JsonProperty
+	public int getTrunkLength() {
+		return 10;
 	}
 
 	@Override
 	public String toString() {
-		return "Elephant [name=" + name + 
-				", getName()=" + getName() + 
-				", getSound()=" + getSound() + 
+		return "Elephant [getName()=" + getName() + 
 				", getType()=" + getType() + 
-				", isEndangered()=" + isEndangered() + "]";
+				", getTrunkLength()=" + getTrunkLength() + 
+				"]";
 	}
 }
