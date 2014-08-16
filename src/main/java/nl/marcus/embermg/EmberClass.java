@@ -1,4 +1,4 @@
-package org.marcusk.embermg;
+package nl.marcus.embermg;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class EmberClass {
 	}
 	
 	public String getName() {
-		return ref.getFullName();
+		return ref.getUpperName();
 	}
 
 	/**

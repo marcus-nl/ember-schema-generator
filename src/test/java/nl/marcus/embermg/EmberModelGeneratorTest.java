@@ -1,10 +1,13 @@
-package org.marcusk.embermg;
+package nl.marcus.embermg;
+
+import nl.marcus.embermg.EmberModelCollector;
+import nl.marcus.embermg.EmberModelWriter;
+import nl.marcus.embermg.jackson.ExplicitPropertiesFilter;
+import nl.marcus.embermg.jackson.ExplicitPropertiesMixin;
+import nl.marcus.embermg.zoo.Animal;
+import nl.marcus.embermg.zoo.Zoo;
 
 import org.junit.Test;
-import org.marcusk.embermg.jackson.ExplicitPropertiesMixin;
-import org.marcusk.embermg.jackson.ExplicitPropertiesFilter;
-import org.marcusk.embermg.zoo.Animal;
-import org.marcusk.embermg.zoo.Zoo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;

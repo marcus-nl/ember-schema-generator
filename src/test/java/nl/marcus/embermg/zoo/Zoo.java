@@ -1,4 +1,4 @@
-package org.marcusk.embermg.zoo;
+package nl.marcus.embermg.zoo;
 
 import java.util.List;
 

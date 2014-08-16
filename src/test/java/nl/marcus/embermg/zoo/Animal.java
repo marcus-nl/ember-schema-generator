@@ -1,4 +1,4 @@
-package org.marcusk.embermg.zoo;
+package nl.marcus.embermg.zoo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

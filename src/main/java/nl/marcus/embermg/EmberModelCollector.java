@@ -1,13 +1,16 @@
-package org.marcusk.embermg;
+package nl.marcus.embermg;
 
-import org.reflections.Reflections;
+import java.util.Collection;
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.cfg.MapperConfig;
+import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonAnyFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonBooleanFormatVisitor;
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonNullFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonNumberFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonStringFormatVisitor;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.SimpleType;
@@ -43,15 +47,27 @@ public class EmberModelCollector {
 	}
 
 	public EmberModelCollector addHierarchy(Class<?> base) {
-		addClass(base);
+		processClass(base);
 		
-		Reflections reflections = new Reflections();
+//		Reflections reflections = new Reflections();
 		
-		for (Class<?> c : reflections.getSubTypesOf(base)) {
-			processClass(c);
+//		for (Class<?> c : reflections.getSubTypesOf(base)) {
+//			processClass(c);
+//		}
+		
+		for (NamedType nt : getSubTypes(base)) {
+			System.out.println(nt);
+			processClass(nt.getType());
 		}
 		
 		return this;
+	}
+
+	protected Collection<NamedType> getSubTypes(Class<?> base) {
+		MapperConfig<?> config = objectMapper.getDeserializationConfig();
+		AnnotatedClass basetype = config.introspectClassAnnotations(base).getClassInfo();
+		AnnotationIntrospector ai = config.getAnnotationIntrospector();
+		return objectMapper.getSubtypeResolver().collectAndResolveSubtypes(basetype, config, ai);
 	}
 
 	public void write(EmberModelWriter writer) {
@@ -75,7 +91,7 @@ public class EmberModelCollector {
 	private void initializeSuperTypes() {
 		for (EmberClass c : typeRegistry.getEmberClasses()) {
 			Class<?> superJavaClass = c.getJavaClass().getSuperclass();
-			EmberTypeRef superTypeRef = typeRegistry.getTypeRef(superJavaClass);
+			EmberTypeRef superTypeRef = superJavaClass == null ? null : typeRegistry.getTypeRef(superJavaClass);
 			c.initializeSuperType(typeRegistry.getEmberClass(superTypeRef));
 		}
 	}
@@ -218,13 +234,6 @@ public class EmberModelCollector {
 			if (ser == null) {
 				return;
 			}
-			
-			// dit werkt helaas niet zo, want dit bevat ook overridden members.
-			// dus: via hasOwnProperty tijdens printen.
-//			Class<?> declaringClass = prop.getMember().getDeclaringClass();
-//			if (!declaringClass.equals(emberClass.getJavaClass())) {
-//				return;
-//			}
 			
 			JavaType jacksonType = prop.getType();
 			if (jacksonType == null) {

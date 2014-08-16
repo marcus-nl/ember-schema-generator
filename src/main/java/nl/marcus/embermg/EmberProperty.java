@@ -1,4 +1,4 @@
-package org.marcusk.embermg;
+package nl.marcus.embermg;
 
 import com.google.common.base.Preconditions;
 

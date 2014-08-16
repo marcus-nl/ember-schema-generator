@@ -1,4 +1,4 @@
-package org.marcusk.embermg;
+package nl.marcus.embermg;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;

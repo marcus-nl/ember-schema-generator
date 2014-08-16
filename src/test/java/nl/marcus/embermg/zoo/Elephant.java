@@ -1,30 +1,30 @@
-package org.marcusk.embermg.zoo;
+package nl.marcus.embermg.zoo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Lion extends Animal {
+public class Elephant extends Animal {
 
 	@JsonCreator
-	public Lion(@JsonProperty("name") String name) {
+	public Elephant(@JsonProperty("name") String name) {
 		super(name);
 	}
 
 	@Override
 	public String getType() {
-		return "carnivorous";
+		return "herbivorous";
 	}
-	
+
 	@JsonProperty
-	public boolean hasManes() {
-		return true;
+	public int getTrunkLength() {
+		return 10;
 	}
 
 	@Override
 	public String toString() {
-		return "Lion [getName()=" + getName() + 
+		return "Elephant [getName()=" + getName() + 
 				", getType()=" + getType() + 
-				", hasManes()=" + hasManes() + 
+				", getTrunkLength()=" + getTrunkLength() + 
 				"]";
 	}
 }

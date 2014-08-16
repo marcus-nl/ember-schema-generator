@@ -1,10 +1,11 @@
-package org.marcusk.embermg;
+package nl.marcus.embermg;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 public class EmberTypeRegistry {
@@ -17,6 +18,7 @@ public class EmberTypeRegistry {
 	}
 
 	public EmberTypeRef getTypeRef(Class<?> javaClass) {
+		Preconditions.checkNotNull(javaClass);
 		EmberTypeRef ref = refs.get(javaClass);
 		if (ref == null) {
 			ref = EmberTypeRef.forType(javaClass.getSimpleName());
