@@ -49,12 +49,6 @@ public class EmberModelCollector {
 	public EmberModelCollector addHierarchy(Class<?> base) {
 		processClass(base);
 		
-//		Reflections reflections = new Reflections();
-		
-//		for (Class<?> c : reflections.getSubTypesOf(base)) {
-//			processClass(c);
-//		}
-		
 		for (NamedType nt : getSubTypes(base)) {
 			System.out.println(nt);
 			processClass(nt.getType());

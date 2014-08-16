@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 
 
 public class EmberTypeRef {
-	public static final EmberTypeRef STRING = new EmberTypeRef("attr", "string");
-	public static final EmberTypeRef NUMBER = new EmberTypeRef("attr", "number");
+	public static final EmberTypeRef STRING  = new EmberTypeRef("attr", "string");
+	public static final EmberTypeRef NUMBER  = new EmberTypeRef("attr", "number");
 	public static final EmberTypeRef BOOLEAN = new EmberTypeRef("attr", "boolean");
 	
 	public static EmberTypeRef forType(String s) {
@@ -33,24 +33,27 @@ public class EmberTypeRef {
 	}
 	
 	/**
-	 * Capitalized.
+	 * Non-capitalized.
 	 */
 	public String getLowerName() {
 		return toLowerName(name);
 	}
 
-	private static String toLowerName(String s) {
-		Preconditions.checkNotNull(s);
-		Preconditions.checkArgument(!s.isEmpty());
-		return Character.toLowerCase(s.charAt(0)) + s.substring(1);
-	}
-
+	/**
+	 * This type represented as a Ember type declaration function.
+	 */
 	public String getDeclaration() {
 		return "DS." + kind + "('" + getLowerName() + "')";
 	}
 	
 	@Override
 	public String toString() {
-		return "EmberTypeRef[" + name + "]";
+		return "EmberTypeRef[" + kind + "|" + name + "]";
+	}
+	
+	private static String toLowerName(String s) {
+		Preconditions.checkNotNull(s);
+		Preconditions.checkArgument(!s.isEmpty());
+		return Character.toLowerCase(s.charAt(0)) + s.substring(1);
 	}
 }
