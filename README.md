@@ -17,6 +17,10 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
 ## Usage
 
+Given the following data model:
+![Zoo UML](https://raw.githubusercontent.com/marcus-nl/ember-model-generator/master/src/main/site/uml/Zoo.png "Zoo UML")
+
+The following Java code can be used:
 ```java
 ObjectMapper objectMapper = ...;
 EmberModelCollector collector = new EmberModelCollector(objectMapper);
@@ -33,8 +37,7 @@ jgen.writeObject(collector.getEmberClasses());
 jgen.close();
 ```
 
-This will generate the following output:
-
+This will generate the following JSON representation:
 ```json
 [ {
   "name" : "Zoo",
