@@ -24,7 +24,81 @@ EmberModelCollector collector = new EmberModelCollector(objectMapper);
 collector.addClass(Zoo.class);
 collector.addHierarchy(Animal.class);
 
-try (EmberModelWriter writer = new EmberModelWriter(...)) {
-	collector.write(writer);
-}
+JsonGenerator jgen = objectMapper.getFactory()
+		.createGenerator(System.out)
+		.useDefaultPrettyPrinter();
+
+jgen.writeObject(collector.getEmberClasses());
+
+jgen.close();
+```
+
+This will generate the following output:
+
+```json
+[ {
+  "name" : "Zoo",
+  "superType" : null,
+  "props" : [ {
+    "name" : "name",
+    "type" : {
+      "kind" : "attr",
+      "name" : "string"
+    }
+  }, {
+    "name" : "city",
+    "type" : {
+      "kind" : "attr",
+      "name" : "string"
+    }
+  }, {
+    "name" : "star",
+    "type" : {
+      "kind" : "fragment",
+      "name" : "Animal"
+    }
+  }, {
+    "name" : "animals",
+    "type" : {
+      "kind" : "fragments",
+      "name" : "Animal"
+    }
+  } ]
+}, {
+  "name" : "Animal",
+  "superType" : null,
+  "props" : [ {
+    "name" : "name",
+    "type" : {
+      "kind" : "attr",
+      "name" : "string"
+    }
+  }, {
+    "name" : "type",
+    "type" : {
+      "kind" : "attr",
+      "name" : "string"
+    }
+  } ]
+}, {
+  "name" : "Elephant",
+  "superType" : "Animal",
+  "props" : [ {
+    "name" : "trunkLength",
+    "type" : {
+      "kind" : "attr",
+      "name" : "number"
+    }
+  } ]
+}, {
+  "name" : "Lion",
+  "superType" : "Animal",
+  "props" : [ {
+    "name" : "hasManes",
+    "type" : {
+      "kind" : "attr",
+      "name" : "boolean"
+    }
+  } ]
+} ]
 ```
