@@ -18,6 +18,7 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 ## Usage
 
 Given the following data model:
+
 ![Zoo UML](https://raw.githubusercontent.com/marcus-nl/ember-model-generator/master/src/main/site/uml/Zoo.png "Zoo UML")
 
 The following Java code can be used:
