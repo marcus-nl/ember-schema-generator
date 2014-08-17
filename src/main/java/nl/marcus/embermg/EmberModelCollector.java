@@ -1,6 +1,7 @@
 package nl.marcus.embermg;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.BeanProperty;
@@ -29,16 +30,13 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
 public class EmberModelCollector {
+	
 	private final ObjectMapper objectMapper;
 	private final EmberTypeRegistry typeRegistry;
 
-	public EmberModelCollector(ObjectMapper objectMapper, EmberTypeRegistry typeRegistry) {
-		this.objectMapper = objectMapper;
-		this.typeRegistry = typeRegistry;
-	}
-	
 	public EmberModelCollector(ObjectMapper objectMapper) {
-		this(objectMapper, new EmberTypeRegistry());
+		this.objectMapper = objectMapper;
+		this.typeRegistry = new EmberTypeRegistry();
 	}
 	
 	public EmberModelCollector addClass(Class<?> c) {
@@ -50,7 +48,6 @@ public class EmberModelCollector {
 		processClass(base);
 		
 		for (NamedType nt : getSubTypes(base)) {
-			System.out.println(nt);
 			processClass(nt.getType());
 		}
 		
@@ -63,25 +60,12 @@ public class EmberModelCollector {
 		AnnotationIntrospector ai = config.getAnnotationIntrospector();
 		return objectMapper.getSubtypeResolver().collectAndResolveSubtypes(basetype, config, ai);
 	}
-
-	public void write(EmberModelWriter writer) {
-		initializeSuperTypes();
-		
-		for (EmberClass c : typeRegistry.getEmberClasses()) {
-			writeClass(writer, c);
-		}
-	}
-
-	protected void writeClass(EmberModelWriter writer, EmberClass c) {
-		writer.startModel(c);
-		
-		for (EmberProperty p : c.ownProperties()) {
-			writer.addProperty(p.getName(), p.getTypeRef().getDeclaration());
-		}
-		
-		writer.endModel();
-	}
 	
+	public List<EmberClass> getEmberClasses() {
+		initializeSuperTypes();
+		return typeRegistry.getEmberClasses();		
+	}
+
 	private void initializeSuperTypes() {
 		for (EmberClass c : typeRegistry.getEmberClasses()) {
 			Class<?> superJavaClass = c.getJavaClass().getSuperclass();

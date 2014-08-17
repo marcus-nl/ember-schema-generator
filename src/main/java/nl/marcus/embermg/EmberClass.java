@@ -1,18 +1,20 @@
 package nl.marcus.embermg;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.ImmutableList;
 
 public class EmberClass {
 
 	private final Class<?> javaClass;
 	private final EmberTypeRef ref;
 	private final Map<String,EmberProperty> properties;
+	private Optional<EmberClass> _superType; // set by initializeSuperType.
 
 	public EmberClass(Class<?> javaClass, EmberTypeRef ref) {
 		super();
@@ -25,20 +27,42 @@ public class EmberClass {
 		return javaClass;
 	}
 	
+	@JsonProperty
 	public String getName() {
-		return ref.getUpperName();
+		return ref.getName();
 	}
 
+	@JsonProperty("superType")
+	public String getSuperTypeName() {
+		if (getSuperType().isPresent()) {
+			return getSuperType().get().getName();
+		}
+		return null;
+	}
+	
+	public Optional<EmberClass> getSuperType() {
+		if (_superType == null) {
+			throw new IllegalStateException();
+		}
+		return _superType;
+	}
+	
+	public void initializeSuperType(EmberClass superType) {
+		this._superType = Optional.fromNullable(superType);
+	}
+	
 	/**
 	 * @return this class' own (non-inherited) properties.
 	 */
-	public Iterable<EmberProperty> ownProperties() {
-		return Iterables.filter(properties.values(), new Predicate<EmberProperty>() {
-			@Override
-			public boolean apply(EmberProperty p) {
-				return !isInheritedProperty(p.getName());
+	@JsonProperty("props")
+	public List<EmberProperty> getOwnProperties() {
+		ImmutableList.Builder<EmberProperty> builder = ImmutableList.builder();
+		for (EmberProperty property : properties.values()) {
+			if (!isInheritedProperty(property.getName())) {
+				builder.add(property);
 			}
-		});
+		}
+		return builder.build();
 	}
 	
 	private boolean hasProperty(String name) {
@@ -59,21 +83,6 @@ public class EmberClass {
 		
 		EmberProperty property = new EmberProperty(name, typeRef);
 		properties.put(name, property);
-	}
-	
-	// initialized by EmberModelCollector:
-
-	private Optional<EmberClass> _superType = null;
-	
-	public Optional<EmberClass> getSuperType() {
-		if (_superType == null) {
-			throw new IllegalStateException();
-		}
-		return _superType;
-	}
-	
-	public void initializeSuperType(EmberClass superType) {
-		this._superType = Optional.fromNullable(superType);
 	}
 	
 	@Override

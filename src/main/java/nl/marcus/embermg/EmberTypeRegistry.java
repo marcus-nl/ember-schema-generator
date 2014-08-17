@@ -8,10 +8,15 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-public class EmberTypeRegistry {
+class EmberTypeRegistry {
 
-	private final Map<Class<?>, EmberTypeRef> refs = new HashMap<>();
-	private final Map<EmberTypeRef, EmberClass> types = new LinkedHashMap<>();
+	private final Map<Class<?>, EmberTypeRef> refs;
+	private final Map<EmberTypeRef, EmberClass> types;
+	
+	public EmberTypeRegistry() {
+		this.refs = new HashMap<>();
+		this.types = new LinkedHashMap<>();
+	}
 	
 	public List<EmberClass> getEmberClasses() {
 		return ImmutableList.copyOf(types.values());

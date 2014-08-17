@@ -1,9 +1,10 @@
 package nl.marcus.embermg;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
-
 public class EmberTypeRef {
+	
 	public static final EmberTypeRef STRING  = new EmberTypeRef("attr", "string");
 	public static final EmberTypeRef NUMBER  = new EmberTypeRef("attr", "number");
 	public static final EmberTypeRef BOOLEAN = new EmberTypeRef("attr", "boolean");
@@ -25,16 +26,23 @@ public class EmberTypeRef {
 		this.name = name;
 	}
 
+	@JsonProperty
+	public String getKind() {
+		return kind;
+	}
+	
 	/**
 	 * Capitalized.
 	 */
-	public String getUpperName() {
+	@JsonProperty("name")
+	public String getName() {
 		return name;
 	}
 	
 	/**
 	 * Non-capitalized.
 	 */
+	@Deprecated
 	public String getLowerName() {
 		return toLowerName(name);
 	}
@@ -42,6 +50,7 @@ public class EmberTypeRef {
 	/**
 	 * This type represented as a Ember type declaration function.
 	 */
+	@Deprecated
 	public String getDeclaration() {
 		return "DS." + kind + "('" + getLowerName() + "')";
 	}
