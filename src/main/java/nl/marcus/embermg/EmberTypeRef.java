@@ -1,7 +1,6 @@
 package nl.marcus.embermg;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 
 public class EmberTypeRef {
 	
@@ -31,38 +30,13 @@ public class EmberTypeRef {
 		return kind;
 	}
 	
-	/**
-	 * Capitalized.
-	 */
 	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
 	
-	/**
-	 * Non-capitalized.
-	 */
-	@Deprecated
-	public String getLowerName() {
-		return toLowerName(name);
-	}
-
-	/**
-	 * This type represented as a Ember type declaration function.
-	 */
-	@Deprecated
-	public String getDeclaration() {
-		return "DS." + kind + "('" + getLowerName() + "')";
-	}
-	
 	@Override
 	public String toString() {
 		return "EmberTypeRef[" + kind + "|" + name + "]";
-	}
-	
-	private static String toLowerName(String s) {
-		Preconditions.checkNotNull(s);
-		Preconditions.checkArgument(!s.isEmpty());
-		return Character.toLowerCase(s.charAt(0)) + s.substring(1);
 	}
 }
