@@ -28,10 +28,7 @@ public class EmberModelGeneratorTest {
 				.createGenerator(System.out)
 				.useDefaultPrettyPrinter();
 		
-		for (EmberClass c : collector.getEmberClasses()) {
-			jgen.writeObject(c);
-			System.out.println();
-		}
+		jgen.writeObject(collector.getEmberClasses());
 		
 		jgen.close();
 	}
