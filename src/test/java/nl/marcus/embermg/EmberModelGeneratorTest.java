@@ -19,16 +19,18 @@ public class EmberModelGeneratorTest {
 	@Test
 	public void jacksonCollector() throws IOException {
 		ObjectMapper objectMapper = createObjectMapper();
-		EmberModelCollector collector = new EmberModelCollector(objectMapper);
+		EmberSchemaGenerator generator = new EmberSchemaGenerator(objectMapper);
 		
-		collector.addClass(Zoo.class);
-		collector.addHierarchy(Animal.class);
+		generator.addClass(Zoo.class);
+		generator.addHierarchy(Animal.class);
+
+		EmberSchema schema = generator.getEmberSchema();
 
 		JsonGenerator jgen = objectMapper.getFactory()
 				.createGenerator(System.out)
 				.useDefaultPrettyPrinter();
 		
-		jgen.writeObject(collector.getEmberClasses());
+		jgen.writeObject(schema);
 		
 		jgen.close();
 	}

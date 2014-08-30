@@ -1,8 +1,8 @@
 package nl.marcus.embermg;
 
 import java.util.Collection;
-import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JavaType;
@@ -29,22 +29,22 @@ import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
-public class EmberModelCollector {
+public class EmberSchemaGenerator {
 	
 	private final ObjectMapper objectMapper;
 	private final EmberTypeRegistry typeRegistry;
 
-	public EmberModelCollector(ObjectMapper objectMapper) {
+	public EmberSchemaGenerator(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 		this.typeRegistry = new EmberTypeRegistry();
 	}
 	
-	public EmberModelCollector addClass(Class<?> c) {
+	public EmberSchemaGenerator addClass(Class<?> c) {
 		processClass(c);
 		return this;
 	}
 
-	public EmberModelCollector addHierarchy(Class<?> base) {
+	public EmberSchemaGenerator addHierarchy(Class<?> base) {
 		processClass(base);
 		
 		for (NamedType nt : getSubTypes(base)) {
@@ -61,9 +61,9 @@ public class EmberModelCollector {
 		return objectMapper.getSubtypeResolver().collectAndResolveSubtypes(basetype, config, ai);
 	}
 	
-	public List<EmberClass> getEmberClasses() {
+	public EmberSchema getEmberSchema() {
 		initializeSuperTypes();
-		return typeRegistry.getEmberClasses();		
+		return new EmberSchema(typeRegistry.getEmberClasses());		
 	}
 
 	private void initializeSuperTypes() {
@@ -87,9 +87,16 @@ public class EmberModelCollector {
 
 	protected EmberClass convert(SimpleType jacksonType) {
 		Class<?> javaClass = jacksonType.getRawClass();
-		EmberTypeRef ref = typeRegistry.getTypeRef(javaClass);
+//		EmberTypeRef ref = typeRegistry.getTypeRef(javaClass);
+		String typeName = getTypeName(jacksonType);
 		
-		return new EmberClass(javaClass, ref);
+		return new EmberClass(javaClass, typeName);
+	}
+
+	private String getTypeName(SimpleType jacksonType) {
+		Class<?> javaClass = jacksonType.getRawClass();
+		JsonTypeName anno = javaClass.getAnnotation(JsonTypeName.class);
+		return anno == null ? javaClass.getSimpleName() : anno.value();
 	}
 
 	class FormatVisitor implements JsonFormatVisitorWrapper {

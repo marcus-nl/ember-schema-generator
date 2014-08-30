@@ -2,7 +2,9 @@ package nl.marcus.embermg.zoo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName("Elephas")
 public class Elephant extends Animal {
 
 	@JsonCreator

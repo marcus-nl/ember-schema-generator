@@ -2,12 +2,8 @@ package nl.marcus.embermg.zoo;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = As.PROPERTY, property = "@class")
 public class Zoo {
 
 	public String name;
@@ -15,10 +11,21 @@ public class Zoo {
 	public Animal star;
 	public List<Animal> animals;
 
-	@JsonCreator
-	public Zoo(@JsonProperty("name") String name, @JsonProperty("city") String city) {
+	public Zoo(String name, String city, Animal star, List<Animal> animals) {
 		this.name = name;
 		this.city = city;
+		this.star = star;
+		this.animals = animals;
+	}
+
+	@JsonProperty
+	public String getName() {
+		return name;
+	}
+	
+	@JsonProperty
+	public String getCity() {
+		return city;
 	}
 	
 	@JsonProperty

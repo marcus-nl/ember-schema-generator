@@ -9,11 +9,11 @@ public class EmberTypeRef {
 	public static final EmberTypeRef BOOLEAN = new EmberTypeRef("attr", "boolean");
 	
 	public static EmberTypeRef forType(String s) {
-		return new EmberTypeRef("fragment", s);
+		return new EmberTypeRef("one", s);
 	}
 	
 	public static EmberTypeRef forCollection(String s) {
-		return new EmberTypeRef("fragments", s);
+		return new EmberTypeRef("many", s);
 	}
 	
 	private final String kind;

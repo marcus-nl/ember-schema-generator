@@ -12,14 +12,14 @@ import com.google.common.collect.ImmutableList;
 public class EmberClass {
 
 	private final Class<?> javaClass;
-	private final EmberTypeRef ref;
+	private final String name;
 	private final Map<String,EmberProperty> properties;
 	private Optional<EmberClass> _superType; // set by initializeSuperType.
 
-	public EmberClass(Class<?> javaClass, EmberTypeRef ref) {
+	public EmberClass(Class<?> javaClass, String name) {
 		super();
 		this.javaClass = Preconditions.checkNotNull(javaClass);
-		this.ref = Preconditions.checkNotNull(ref);
+		this.name = Preconditions.checkNotNull(name);
 		this.properties = new LinkedHashMap<>();
 	}
 	
@@ -29,7 +29,7 @@ public class EmberClass {
 	
 	@JsonProperty
 	public String getName() {
-		return ref.getName();
+		return name;
 	}
 
 	@JsonProperty("superType")
