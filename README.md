@@ -1,6 +1,6 @@
-# ember-model-generator
+# ember-schema-generator
 
-Generates an Ember model from a Jackson model.
+Generates an Ember schema from a Jackson model.
 
 ## License
 
@@ -10,7 +10,7 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 ```xml
 <dependency>
 	<groupId>nl.marcus</groupId>
-	<artifactId>ember-model-generator</artifactId>
+	<artifactId>ember-schema-generator</artifactId>
 	<version>0.1-SNAPSHOT</version>
 </dependency>
 ```
