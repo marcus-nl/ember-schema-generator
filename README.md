@@ -11,7 +11,7 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 <dependency>
 	<groupId>nl.marcus</groupId>
 	<artifactId>ember-schema-generator</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -21,7 +21,7 @@ Given the following data model:
 
 ![Zoo UML](https://raw.githubusercontent.com/marcus-nl/ember-model-generator/master/src/main/site/uml/Zoo.png "Zoo UML")
 
-An EmberSchema can be created as follows:
+An EmberSchema can be generated as follows:
 ```java
 ObjectMapper objectMapper = ...;
 EmberSchemaGenerator generator = new EmberSchemaGenerator(objectMapper);
