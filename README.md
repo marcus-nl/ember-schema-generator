@@ -32,7 +32,7 @@ generator.addHierarchy(Animal.class);
 EmberSchema schema = generator.getEmberSchema();
 ```
 
-The EmberSchema has the following JSON representation:
+The resulting EmberSchema has the following JSON representation:
 ```json
 {
   "classes" : [ {
