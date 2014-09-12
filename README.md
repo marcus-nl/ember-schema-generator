@@ -9,7 +9,7 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 ## Maven
 ```xml
 <dependency>
-	<groupId>nl.marcus</groupId>
+	<groupId>com.github.marcus-nl</groupId>
 	<artifactId>ember-schema-generator</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 </dependency>
