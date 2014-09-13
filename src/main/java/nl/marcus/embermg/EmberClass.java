@@ -49,7 +49,7 @@ public class EmberClass {
 	
 	public Optional<EmberClass> getSuperType() {
 		if (_superType == null) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("Super type was not set");
 		}
 		return _superType;
 	}

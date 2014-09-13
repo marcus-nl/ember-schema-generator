@@ -7,17 +7,14 @@ import nl.marcus.embermg.jackson.ExplicitPropertiesMixin;
 import nl.marcus.embermg.zoo.Animal;
 import nl.marcus.embermg.zoo.Zoo;
 
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonGenerator.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-public class EmberSchemaGeneratorTest {
+public class EmberSchemaGeneratorExample {
 
-	@Test
-	public void jacksonCollector() throws IOException {
+	public void run() throws IOException {
 		ObjectMapper objectMapper = createObjectMapper();
 		EmberSchemaGenerator generator = new EmberSchemaGenerator(objectMapper);
 		
