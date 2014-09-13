@@ -66,6 +66,7 @@
 					<additionalparam>-Xdoclint:none</additionalparam>
 					<links>
 						<link>http://docs.oracle.com/javase/7/docs/api/</link>
+						<link>http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/</link>
 						<link>http://fasterxml.github.io/jackson-core/javadoc/2.4/</link>
 						<link>http://fasterxml.github.io/jackson-databind/javadoc/2.4/</link>
 						<link>http://fasterxml.github.io/jackson-annotations/javadoc/2.4/</link>
