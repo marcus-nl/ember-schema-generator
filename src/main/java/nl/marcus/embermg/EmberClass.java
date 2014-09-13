@@ -9,6 +9,13 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * Represents a class inside an Ember schema.
+ * 
+ * A class has a name, properties and an optional super type.
+ * 
+ * @author Marcus Klimstra
+ */
 public class EmberClass {
 
 	private final Class<?> javaClass;

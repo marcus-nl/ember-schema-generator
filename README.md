@@ -1,4 +1,4 @@
-# ember-schema-generator
+# Ember Schema Generator
 
 Ember Schema Generator can be used to generate an Ember schema from a Jackson model.
 
@@ -18,6 +18,10 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 	<version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
+
+## JavaDoc
+
+http://marcus-nl.github.io/ember-schema-generator/
 
 ## Usage
 
