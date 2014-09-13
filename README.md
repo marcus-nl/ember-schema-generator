@@ -17,6 +17,12 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
 ## Usage
 
+Create an instance of EmberSchemaGenerator by passing your Jackson ObjectMapper to its constructor. Then register the classes and hierarchies you want included in the model by calling addClass and addHierarchy respectively. Those classes will be processed by inspecting all properties that are known to the ObjectMapper. All classes that were encountered by inspecting those properties will also be processed. 
+
+The generator will respect the property filters of the object mapper, so that only those properties that are included by the filters will end up in the schema.
+
+## Example
+
 Given the following data model:
 
 ![Zoo UML](https://raw.githubusercontent.com/marcus-nl/ember-model-generator/master/src/main/site/uml/Zoo.png "Zoo UML")
@@ -31,8 +37,7 @@ generator.addHierarchy(Animal.class);
 
 EmberSchema schema = generator.getEmberSchema();
 ```
-
-The resulting EmberSchema has the following JSON representation:
+The EmberSchema can then be converted to JSON in the usual way (e.g. ![like this](https://gist.github.com/marcus-nl/e1e70202c3890fc8e809)), which will look like this:
 ```json
 {
   "classes" : [ {

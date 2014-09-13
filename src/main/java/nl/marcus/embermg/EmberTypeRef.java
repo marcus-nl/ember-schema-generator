@@ -11,9 +11,15 @@ import com.google.common.base.Objects;
  * This corresponds to an Ember Data type declaration of "attr('number')". 
  * <p>
  * A (non-collection) object type "Foo" is represented by instance of this class with kind "one" and name "Foo".  
- * By default this corresponds to an Ember Data type declaration of "hasOne('foo')". 
+ * By default this corresponds to an Ember Data type declaration of "DS.hasOne('foo')". 
  * <p>
- * For collection types the kind is "many". The corresponding Ember Data type declaration would be, for example, "forMany('foo')" by default.
+ * For collection types the kind is "many". The corresponding Ember Data type declaration would be, for example, "DS.forMany('foo')" by default.
+ * <p>
+ * Note that since this is a <em>declarative</em> representation of the type reference, the schema loader 
+ * (see <a href="https://github.com/marcus-nl/ember-schema-loader">Ember Schema Loader</a>)
+ * can decide how exactly to handle it. This means that by default the kind "one" will be translated to "DS.hasOne(...)",
+ * but it can also use <a href="https://github.com/lytics/ember-data.model-fragments">Ember Data: Model Fragments</a> 
+ * by translating it to "DS.hasOneFragment(...)".
  * <p>
  * 
  * @author Marcus Klimstra

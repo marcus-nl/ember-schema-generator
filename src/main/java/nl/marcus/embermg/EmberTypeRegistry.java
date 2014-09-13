@@ -8,6 +8,11 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * Registry of known mappings from {@link Class} to {@link EmberTypeRef} and {@link EmberTypeRef} to {@link EmberClass}.
+ * 
+ * @author Marcus Klimstra
+ */
 class EmberTypeRegistry {
 
 	private final Map<Class<?>, EmberTypeRef> refs;
