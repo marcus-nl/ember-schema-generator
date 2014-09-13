@@ -1,6 +1,10 @@
 # ember-schema-generator
 
-Generates an Ember schema from a Jackson model.
+Ember Schema Generator can be used to generate an Ember schema from a Jackson model.
+
+For our purpuses, a Jackson model is the set of classes that are mapped by [Jackson Databind](https://github.com/FasterXML/jackson-databind).
+
+The generated Ember schema contains these mapped classes and their properties. The classes have an optional super type. Each property has a name and a declared type. 
 
 ## License
 
