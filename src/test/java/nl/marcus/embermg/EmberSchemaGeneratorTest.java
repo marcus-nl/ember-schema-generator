@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonGenerator.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-public class EmberModelGeneratorTest {
+public class EmberSchemaGeneratorTest {
 
 	@Test
 	public void jacksonCollector() throws IOException {
