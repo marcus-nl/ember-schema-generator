@@ -29,21 +29,47 @@ import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
+/**
+ * Generator for an {@link EmberSchema} based on the data model known by a Jackson {@link ObjectMapper}.
+ * <p>
+ * The resulting schema contains all classes that were added by calling {@link #addClass(Class)}, {@link #addHierarchy(Class)}
+ * and those classes that were encountered recursively by those methods.
+ * 
+ * @author Marcus Klimstra
+ */
 public class EmberSchemaGenerator {
 	
 	private final ObjectMapper objectMapper;
 	private final EmberTypeRegistry typeRegistry;
 
+	/**
+	 * Creates a new EmberSchemaGenerator based on the specified Jackson {@link ObjectMapper}.
+	 * @param objectMapper the Jackson ObjectMapper.
+	 */
 	public EmberSchemaGenerator(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 		this.typeRegistry = new EmberTypeRegistry();
 	}
 	
-	public EmberSchemaGenerator addClass(Class<?> c) {
-		processClass(c);
+	/**
+	 * Adds a class to be processed.
+	 * All classes that are related through properties that are visited will also be processed.
+	 * 
+	 * @param cls the class to add.
+	 * @return this.
+	 */
+	public EmberSchemaGenerator addClass(Class<?> cls) {
+		processClass(cls);
 		return this;
 	}
 
+	/**
+	 * Adds a class hierarchy to be processed.
+	 * All classes that are related through properties that are visited will also be processed.
+	 * 
+	 * @param base the base class of the hierarchy.
+	 * @return this.
+	 */
 	public EmberSchemaGenerator addHierarchy(Class<?> base) {
 		processClass(base);
 		
@@ -54,6 +80,20 @@ public class EmberSchemaGenerator {
 		return this;
 	}
 
+	/**
+	 * Returns the {@link EmberSchema} that results from processing the classes that were added to this generator.
+	 */
+	public EmberSchema getEmberSchema() {
+		initializeSuperTypes();
+		return new EmberSchema(typeRegistry.getEmberClasses());		
+	}
+
+	/**
+	 * Returns a collection of Jackson {@link NamedType}s that represent the subtypes of the specified base class.
+	 * Note that the collection does not have a specified order.
+	 * 
+	 * @param base the base class.
+	 */
 	protected Collection<NamedType> getSubTypes(Class<?> base) {
 		MapperConfig<?> config = objectMapper.getDeserializationConfig();
 		AnnotatedClass basetype = config.introspectClassAnnotations(base).getClassInfo();
@@ -61,23 +101,17 @@ public class EmberSchemaGenerator {
 		return objectMapper.getSubtypeResolver().collectAndResolveSubtypes(basetype, config, ai);
 	}
 	
-	public EmberSchema getEmberSchema() {
-		initializeSuperTypes();
-		return new EmberSchema(typeRegistry.getEmberClasses());		
-	}
-
-	private void initializeSuperTypes() {
-		for (EmberClass c : typeRegistry.getEmberClasses()) {
-			Class<?> superJavaClass = c.getJavaClass().getSuperclass();
-			EmberTypeRef superTypeRef = superJavaClass == null ? null : typeRegistry.getTypeRef(superJavaClass);
-			c.initializeSuperType(typeRegistry.getEmberClass(superTypeRef));
-		}
-	}
-
-	protected EmberTypeRef processClass(Class<?> c) {
+	/**
+	 * Processes the specified class by visiting all properties that are known to Jackson. 
+	 * All additional classes that are encountered by visiting these properties will also be processed recursively. 
+	 * Returns an {@link EmberTypeRef} that serves as a reference to the class.
+	 *  
+	 * @param cls the class to process.
+	 */
+	protected EmberTypeRef processClass(Class<?> cls) {
 		try {
 			FormatVisitor visitor = new FormatVisitor(objectMapper.getSerializerProvider());
-			objectMapper.acceptJsonFormatVisitor(c, visitor);
+			objectMapper.acceptJsonFormatVisitor(cls, visitor);
 			return visitor.getTypeRef();
 		}
 		catch (JsonMappingException e) {
@@ -85,9 +119,11 @@ public class EmberSchemaGenerator {
 		}
 	}
 
+	/**
+	 * Converts a Jackson {@link SimpleType} to an {@link EmberClass}.
+	 */
 	protected EmberClass convert(SimpleType jacksonType) {
 		Class<?> javaClass = jacksonType.getRawClass();
-//		EmberTypeRef ref = typeRegistry.getTypeRef(javaClass);
 		String typeName = getTypeName(jacksonType);
 		
 		return new EmberClass(javaClass, typeName);
@@ -99,7 +135,15 @@ public class EmberSchemaGenerator {
 		return anno == null ? javaClass.getSimpleName() : anno.value();
 	}
 
-	class FormatVisitor implements JsonFormatVisitorWrapper {
+	private void initializeSuperTypes() {
+		for (EmberClass c : typeRegistry.getEmberClasses()) {
+			Class<?> superJavaClass = c.getJavaClass().getSuperclass();
+			EmberTypeRef superTypeRef = superJavaClass == null ? null : typeRegistry.getTypeRef(superJavaClass);
+			c.initializeSuperType(typeRegistry.getEmberClass(superTypeRef));
+		}
+	}
+
+	private class FormatVisitor implements JsonFormatVisitorWrapper {
 
 		private SerializerProvider provider;
 		private EmberTypeRef typeRef;
@@ -185,7 +229,7 @@ public class EmberSchemaGenerator {
 		}
 	}
 	
-	class ObjectVisitor extends JsonObjectFormatVisitor.Base {
+	private class ObjectVisitor extends JsonObjectFormatVisitor.Base {
 
 		private final EmberClass emberClass;
 		
