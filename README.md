@@ -37,7 +37,7 @@ generator.addHierarchy(Animal.class);
 
 EmberSchema schema = generator.getEmberSchema();
 ```
-The EmberSchema can then be converted to JSON in the usual way (e.g. ![like this](https://gist.github.com/marcus-nl/e1e70202c3890fc8e809)), which will look like this:
+The EmberSchema can then be converted to JSON in the usual way ([example](https://gist.github.com/marcus-nl/e1e70202c3890fc8e809)), which will look like this:
 ```json
 {
   "classes" : [ {
