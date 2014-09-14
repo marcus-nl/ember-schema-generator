@@ -8,7 +8,7 @@
 	</parent>
    	<groupId>com.github.marcus-nl</groupId>
 	<artifactId>ember-schema-generator</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>Ember Schema Generator</name>
 	<description>Generates an Ember schema from a Jackson model.</description>
