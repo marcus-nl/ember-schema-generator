@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -30,6 +31,7 @@ public class EmberClass {
 		this.properties = new LinkedHashMap<>();
 	}
 	
+	@JsonIgnore
 	public Class<?> getJavaClass() {
 		return javaClass;
 	}
@@ -47,6 +49,7 @@ public class EmberClass {
 		return null;
 	}
 	
+	@JsonIgnore
 	public Optional<EmberClass> getSuperType() {
 		if (_superType == null) {
 			throw new IllegalStateException("Super type was not set");
