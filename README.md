@@ -17,7 +17,7 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 <dependency>
 	<groupId>com.github.marcus-nl</groupId>
 	<artifactId>ember-schema-generator</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 
@@ -30,6 +30,8 @@ http://marcus-nl.github.io/ember-schema-generator/
 Create an instance of EmberSchemaGenerator by passing your Jackson ObjectMapper to its constructor. Then register the classes and hierarchies you want included in the model by calling addClass and addHierarchy respectively. Those classes will be processed by inspecting all properties that are known to the ObjectMapper. All classes that were encountered by inspecting those properties will also be processed. 
 
 The generator will respect the property filters of the object mapper, so that only those properties that are included by the filters will end up in the schema.
+
+Note that addHierarchy will only add those classes that are known by the object mapper, either through ObjectMapper#registerSubtypes or by using the @JsonSubTypes annotation on the base type.
 
 ## Example
 
