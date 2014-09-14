@@ -51,8 +51,8 @@ public final class EmberTypeRef {
 	/**
 	 * Returns an {@link EmberTypeRef} for a collection type with the specified name.
 	 */
-	public static EmberTypeRef forCollection(String s) {
-		return new EmberTypeRef("many", s);
+	public static EmberTypeRef forCollection(String name) {
+		return new EmberTypeRef("many", name);
 	}
 	
 	private final String kind;

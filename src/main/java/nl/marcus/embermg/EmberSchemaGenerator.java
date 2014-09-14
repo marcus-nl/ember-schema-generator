@@ -108,11 +108,10 @@ public class EmberSchemaGenerator {
 	 *  
 	 * @param cls the class to process.
 	 */
-	protected EmberTypeRef processClass(Class<?> cls) {
+	protected void processClass(Class<?> cls) {
 		try {
 			FormatVisitor visitor = new FormatVisitor(objectMapper.getSerializerProvider());
 			objectMapper.acceptJsonFormatVisitor(cls, visitor);
-			return visitor.getTypeRef();
 		}
 		catch (JsonMappingException e) {
 			throw new RuntimeException(e);
@@ -138,8 +137,7 @@ public class EmberSchemaGenerator {
 	private void initializeSuperTypes() {
 		for (EmberClass c : typeRegistry.getEmberClasses()) {
 			Class<?> superJavaClass = c.getJavaClass().getSuperclass();
-			EmberTypeRef superTypeRef = superJavaClass == null ? null : typeRegistry.getTypeRef(superJavaClass);
-			c.initializeSuperType(typeRegistry.getEmberClass(superTypeRef));
+			c.initializeSuperType(typeRegistry.getEmberClass(superJavaClass));
 		}
 	}
 
@@ -169,16 +167,20 @@ public class EmberSchemaGenerator {
 		@Override
 		public JsonObjectFormatVisitor expectObjectFormat(JavaType type) throws JsonMappingException {
 			SimpleType jacksonType = (SimpleType) type;
-			typeRef = typeRegistry.getTypeRef(jacksonType.getRawClass());
+			Class<?> javaClass = jacksonType.getRawClass();
+			EmberClass emberClass = typeRegistry.getEmberClass(javaClass);
 			
-			if (!typeRegistry.containsType(typeRef)) {
-				EmberClass emberClass = convert(jacksonType);
-				typeRegistry.register(typeRef, emberClass);
-
+			if (emberClass != null) {
+				this.typeRef = EmberTypeRef.forType(emberClass.getName());
+				return null;
+			}
+			else {
+				emberClass = convert(jacksonType);
+				typeRegistry.register(javaClass, emberClass);
+				
+				this.typeRef = EmberTypeRef.forType(emberClass.getName());
 				return new ObjectVisitor(getProvider(), emberClass);
 			}
-			
-			return null;
 		}
 
 		@Override

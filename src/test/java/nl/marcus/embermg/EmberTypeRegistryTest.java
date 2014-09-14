@@ -2,6 +2,7 @@ package nl.marcus.embermg;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import nl.marcus.embermg.zoo.Animal;
+import nl.marcus.embermg.zoo.Lion;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,19 +16,11 @@ public class EmberTypeRegistryTest {
 		typeRegistry = new EmberTypeRegistry();
 
 		typeRegistry.register(
-				EmberTypeRef.forType("Animal"), 
+				Animal.class, 
 				new EmberClass(Animal.class, "T_Animal")
 			);
 	}
 
-	@Test
-	public void getTypeRef() {
-		EmberTypeRef ref = typeRegistry.getTypeRef(Animal.class);
-		assertThat(ref.getKind()).isEqualTo("one");
-	//	assertThat(ref.getName()).isEqualTo("T_Animal");	// FIXME name is currently 'Animal' instead. 
-		assertThat(ref).isEqualTo(EmberTypeRef.forType("Animal"));
-	}
-	
 	@Test
 	public void getEmberClasses() {
 		assertThat(typeRegistry.getEmberClasses())
@@ -38,15 +31,20 @@ public class EmberTypeRegistryTest {
 	
 	@Test
 	public void getEmberClass() {
-		EmberTypeRef ref = EmberTypeRef.forType("Animal");
-		EmberClass cls = typeRegistry.getEmberClass(ref);
+		EmberClass cls = typeRegistry.getEmberClass(Animal.class);
 		assertThat(cls).isNotNull();
 		assertThat(cls.getName()).isEqualTo("T_Animal");
 	}
 	
 	@Test
-	public void containsType() {
-		EmberTypeRef ref = EmberTypeRef.forType("Animal");
-		assertThat(typeRegistry.containsType(ref)).isTrue();
+	public void register() {
+		assertThat(typeRegistry.getEmberClass(Lion.class)).isNull();
+
+		typeRegistry.register(
+				Lion.class, 
+				new EmberClass(Lion.class, "T_Lion")
+			);
+
+		assertThat(typeRegistry.getEmberClass(Lion.class)).isNotNull();
 	}
 }
