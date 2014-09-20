@@ -1,4 +1,4 @@
-package nl.marcus.embermg.jackson;
+package nl.marcus.ember.jackson;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 

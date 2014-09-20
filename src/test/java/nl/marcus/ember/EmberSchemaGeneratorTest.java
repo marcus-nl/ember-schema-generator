@@ -1,4 +1,4 @@
-package nl.marcus.embermg;
+package nl.marcus.ember;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.guava.api.Assertions.assertThat;
@@ -7,12 +7,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.marcus.embermg.jackson.ExplicitPropertiesFilter;
-import nl.marcus.embermg.jackson.ExplicitPropertiesMixin;
-import nl.marcus.embermg.zoo.Animal;
-import nl.marcus.embermg.zoo.Elephant;
-import nl.marcus.embermg.zoo.Lion;
-import nl.marcus.embermg.zoo.Zoo;
+import nl.marcus.ember.jackson.ExplicitPropertiesFilter;
+import nl.marcus.ember.jackson.ExplicitPropertiesMixin;
+import nl.marcus.ember.zoo.Animal;
+import nl.marcus.ember.zoo.Elephant;
+import nl.marcus.ember.zoo.Lion;
+import nl.marcus.ember.zoo.Zoo;
 
 import org.assertj.core.api.Condition;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package nl.marcus.embermg;
+package nl.marcus.ember;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;

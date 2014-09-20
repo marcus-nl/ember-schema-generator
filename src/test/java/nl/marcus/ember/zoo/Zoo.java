@@ -1,4 +1,4 @@
-package nl.marcus.embermg.zoo;
+package nl.marcus.ember.zoo;
 
 import java.util.List;
 

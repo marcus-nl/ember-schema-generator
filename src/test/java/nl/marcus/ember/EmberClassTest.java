@@ -1,11 +1,11 @@
-package nl.marcus.embermg;
+package nl.marcus.ember;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.assertj.guava.api.Assertions.assertThat;
-import nl.marcus.embermg.zoo.Animal;
-import nl.marcus.embermg.zoo.Lion;
-import nl.marcus.embermg.zoo.Zoo;
+import nl.marcus.ember.zoo.Animal;
+import nl.marcus.ember.zoo.Lion;
+import nl.marcus.ember.zoo.Zoo;
 
 import org.junit.Test;
 

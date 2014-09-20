@@ -1,4 +1,4 @@
-package nl.marcus.embermg;
+package nl.marcus.ember;
 
 import java.util.LinkedHashMap;
 import java.util.List;

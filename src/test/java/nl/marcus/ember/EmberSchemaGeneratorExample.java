@@ -1,11 +1,11 @@
-package nl.marcus.embermg;
+package nl.marcus.ember;
 
 import java.io.IOException;
 
-import nl.marcus.embermg.jackson.ExplicitPropertiesFilter;
-import nl.marcus.embermg.jackson.ExplicitPropertiesMixin;
-import nl.marcus.embermg.zoo.Animal;
-import nl.marcus.embermg.zoo.Zoo;
+import nl.marcus.ember.jackson.ExplicitPropertiesFilter;
+import nl.marcus.ember.jackson.ExplicitPropertiesMixin;
+import nl.marcus.ember.zoo.Animal;
+import nl.marcus.ember.zoo.Zoo;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonGenerator.Feature;

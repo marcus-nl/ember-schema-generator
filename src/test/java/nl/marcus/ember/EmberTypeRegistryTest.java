@@ -1,8 +1,8 @@
-package nl.marcus.embermg;
+package nl.marcus.ember;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import nl.marcus.embermg.zoo.Animal;
-import nl.marcus.embermg.zoo.Lion;
+import nl.marcus.ember.zoo.Animal;
+import nl.marcus.ember.zoo.Lion;
 
 import org.junit.Before;
 import org.junit.Test;
