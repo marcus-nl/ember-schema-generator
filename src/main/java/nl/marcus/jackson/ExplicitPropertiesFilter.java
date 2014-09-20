@@ -1,4 +1,4 @@
-package nl.marcus.ember.jackson;
+package nl.marcus.jackson;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;

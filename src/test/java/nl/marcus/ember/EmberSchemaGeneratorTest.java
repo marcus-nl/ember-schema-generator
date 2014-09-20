@@ -7,12 +7,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.marcus.ember.jackson.ExplicitPropertiesFilter;
-import nl.marcus.ember.jackson.ExplicitPropertiesMixin;
 import nl.marcus.ember.zoo.Animal;
 import nl.marcus.ember.zoo.Elephant;
 import nl.marcus.ember.zoo.Lion;
 import nl.marcus.ember.zoo.Zoo;
+import nl.marcus.jackson.ExplicitPropertiesFilter;
+import nl.marcus.jackson.ExplicitPropertiesMixin;
 
 import org.assertj.core.api.Condition;
 import org.junit.Before;

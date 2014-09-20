@@ -2,10 +2,10 @@ package nl.marcus.ember;
 
 import java.io.IOException;
 
-import nl.marcus.ember.jackson.ExplicitPropertiesFilter;
-import nl.marcus.ember.jackson.ExplicitPropertiesMixin;
 import nl.marcus.ember.zoo.Animal;
 import nl.marcus.ember.zoo.Zoo;
+import nl.marcus.jackson.ExplicitPropertiesFilter;
+import nl.marcus.jackson.ExplicitPropertiesMixin;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonGenerator.Feature;
