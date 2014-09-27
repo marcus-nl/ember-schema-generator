@@ -43,6 +43,7 @@ public class EmberSchemaGeneratorTest {
 					.addFilter("explicitProperties", new ExplicitPropertiesFilter())
 			);
 		
+		// this allows us to use empty classes and interfaces
 		objectMapper.addMixInAnnotations(Object.class, ExplicitPropertiesMixin.class);
 		
 		objectMapper.registerSubtypes(new Class[] { SubsRegistered_Sub1.class, SubsRegistered_Sub2.class });
@@ -56,6 +57,22 @@ public class EmberSchemaGeneratorTest {
 		assertThat(schema.getEmberClasses()).isEmpty();
 	}
 	
+	@Test
+	public void emptyClass() {
+		generator.addClass(EmptyClass.class);
+		
+		EmberSchema schema = generator.getEmberSchema();
+		assertThat(schema.getEmberClasses()).hasSize(1);
+	}
+	
+	@Test
+	public void emptyInterface() {
+		generator.addClass(EmptyInterface.class);
+		
+		EmberSchema schema = generator.getEmberSchema();
+		assertThat(schema.getEmberClasses()).hasSize(1);
+	}
+
 	@Test
 	public void associatedClass() {
 		generator.addClass(Zoo.class);
@@ -130,7 +147,7 @@ public class EmberSchemaGeneratorTest {
 				property("type")
 			));
 	}
-
+	
 	@Test
 	public void zoo() {
 		generator.addClass(Zoo.class);
@@ -289,3 +306,6 @@ class SubsRegistered_Base {}
 class SubsRegistered_Sub1 extends SubsRegistered_Base {}
 class SubsRegistered_Sub2 extends SubsRegistered_Base {}
 class SubsRegistered_Sub3 extends SubsRegistered_Base {} // not registered
+
+class EmptyClass {}
+interface EmptyInterface {}

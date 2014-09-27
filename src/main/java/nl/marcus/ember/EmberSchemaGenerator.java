@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.SimpleType;
+import com.google.common.base.Preconditions;
 
 /**
  * Generator for an {@link EmberSchema} based on the data model known by a Jackson {@link ObjectMapper}.
@@ -47,7 +48,7 @@ public class EmberSchemaGenerator {
 	 * @param objectMapper the Jackson ObjectMapper.
 	 */
 	public EmberSchemaGenerator(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
+		this.objectMapper = Preconditions.checkNotNull(objectMapper);
 		this.typeRegistry = new EmberTypeRegistry();
 	}
 	
@@ -137,7 +138,8 @@ public class EmberSchemaGenerator {
 	private void initializeSuperTypes() {
 		for (EmberClass c : typeRegistry.getEmberClasses()) {
 			Class<?> superJavaClass = c.getJavaClass().getSuperclass();
-			c.initializeSuperType(typeRegistry.getEmberClass(superJavaClass));
+			EmberClass emberSuperClass = superJavaClass != null ? typeRegistry.getEmberClass(superJavaClass) : null;
+			c.initializeSuperType(emberSuperClass);
 		}
 	}
 
