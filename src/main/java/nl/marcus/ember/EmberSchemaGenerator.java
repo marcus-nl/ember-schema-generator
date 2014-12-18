@@ -263,6 +263,10 @@ public class EmberSchemaGenerator {
 		}
 		
 		private void addProperty(BeanProperty prop, boolean optional) throws JsonMappingException {
+			if (prop.getAnnotation(EmberIgnore.class) != null) {
+				return;
+			}
+
 			JsonSerializer<Object> ser = getSerializer(prop);
 			if (ser == null) {
 				return;
