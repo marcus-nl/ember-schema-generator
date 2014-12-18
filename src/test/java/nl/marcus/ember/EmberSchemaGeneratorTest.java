@@ -10,6 +10,7 @@ import java.util.List;
 import nl.marcus.ember.zoo.Animal;
 import nl.marcus.ember.zoo.Elephant;
 import nl.marcus.ember.zoo.Lion;
+import nl.marcus.ember.zoo.Rat;
 import nl.marcus.ember.zoo.Zoo;
 import nl.marcus.jackson.ExplicitPropertiesFilter;
 import nl.marcus.jackson.ExplicitPropertiesMixin;
@@ -147,7 +148,27 @@ public class EmberSchemaGeneratorTest {
 				property("type")
 			));
 	}
-	
+
+	@Test
+	public void singleClassWithIgnoredProperty() {
+		generator.addClass(Rat.class);
+
+		EmberSchema schema = generator.getEmberSchema();
+		assertThat(schema.getEmberClasses()).hasSize(1);
+
+		EmberClass rats = schema.getEmberClasses().get(0);
+		assertThat(rats)
+			.is(emberClass(
+				"Rat",
+				Rat.class,
+				null          // Rat does not have a super class
+			))
+			// links are ignored, only family should be recorded
+			.has(sortedProperties(
+				property("family")
+			));
+	}
+
 	@Test
 	public void zoo() {
 		generator.addClass(Zoo.class);
