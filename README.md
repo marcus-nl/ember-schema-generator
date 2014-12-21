@@ -17,7 +17,7 @@ Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0
 <dependency>
 	<groupId>com.github.marcus-nl</groupId>
 	<artifactId>ember-schema-generator</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 </dependency>
 ```
 

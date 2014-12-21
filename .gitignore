@@ -3,4 +3,6 @@
 /.settings
 /target
 /*.lnk
+/*.url
 /*.txt
+/*.bat
